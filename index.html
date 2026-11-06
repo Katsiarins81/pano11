@@ -7,8 +7,8 @@
   <style>
     #panorama { width: 100vw; height: 100vh; }
     body { margin: 0; }
-    .pnlm-panorama-info{
-       display: none;
+    .pnlm-panorama-info {
+       display: none !important;
     }
   </style>
 </head>
@@ -23,6 +23,18 @@
       autoLoad: true,
       haov: 360,
       vaov: 120,
+      
+      // 1. Запрещаем показывать черный фон за пределами фото
+      avoidShowingBackground: true,
+      
+      // 2. Ограничиваем угол наклона камеры ровно половиной от vaov (120 / 2 = 60)
+      minPitch: -60,
+      maxPitch: 60,
+      
+      // 3. Ограничиваем максимальное отдаление (зум), чтобы на широком экране не вылезали края
+      maxHfov: 90,
+      hfov: 80,
+      
       compass: true,
       title: "My Virtual Tour",
       author: "Your Name"
