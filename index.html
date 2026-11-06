@@ -39,6 +39,60 @@
       title: "My Virtual Tour",
       author: "Your Name"
     });
+
+
+    ///
+    pannellum.viewer('panorama', {
+  type: "equirectangular",
+  panorama: "./111.jpg",
+  autoLoad: true,
+  haov: 360,
+  vaov: 120,
+  avoidShowingBackground: true,
+
+  // Ограничение по вертикали (верх/низ)
+  minPitch: -60,
+  maxPitch: 60,
+
+  // Ограничение по горизонтали (чтобы не доходить до стыка на ±180°)
+  minYaw: -150, // Максимальный поворот влево (от -180 до 0)
+  maxYaw: 150,  // Максимальный поворот вправо (от 0 до 180)
+
+  maxHfov: 90,
+  hfov: 80
+});
+    //
+     // Массив меток (хотспотов)
+    hotSpots: [
+      {
+        // 1. Всплывающая текстовая подсказка при наведении
+        pitch: 5,
+        yaw: 10,
+        type: "info",
+        text: "Всплывающая подсказка при наведении курсора"
+      },
+      {
+        // 2. Метка со ссылкой на другой сайт или страницу
+        pitch: -10,
+        yaw: 45,
+        type: "info",
+        text: "Перейти на сайт (откроется в новой вкладке)",
+        URL: "https://example.com"
+      },
+      {
+        // 3. Метка, открывающая красивое всплывающее модальное окно по клику
+        pitch: 0,
+        yaw: -30,
+        type: "info",
+        text: "Нажмите, чтобы открыть карточку",
+        clickHandlerFunc: openModal,
+        clickHandlerArgs: {
+          title: "Название локации",
+          description: "Здесь может быть подробный текст, фото, кнопка заказа или схема проезда."
+        }
+      }
+    ]
+    //
   </script>
 </body>
 </html>
