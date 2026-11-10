@@ -21,8 +21,9 @@
   <!-- Модальное окно для третьей метки -->
   <div id="customModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999; align-items:center; justify-content:center;">
     <div style="background:#fff; padding:20px; border-radius:8px; max-width:400px; text-align:center; font-family:sans-serif;">
-      <h3 id="modalTitle">Заголовок</h3>
-      <p id="modalText">Описание объекта</p>
+      <h3 id="modalTitle">вышиванки</h3>
+       <!--<p id="modalText">Описание объекта</p>-->
+      <img src="img1.jpg">
       <button onclick="document.getElementById('customModal').style.display='none'">Закрыть</button>
     </div>
   </div>
@@ -78,10 +79,10 @@
         },
         {
           // 3. Метка, открывающая всплывающее модальное окно по клику
-          pitch: 0,
-          yaw: -30,
+          pitch: 3.9,
+          yaw: -145,
           type: "info",
-          text: "Нажмите, чтобы открыть карточку",
+          text: "Нажмите, чтобы открыть окно",
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "Название локации",
