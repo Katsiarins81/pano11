@@ -10,9 +10,43 @@
     .pnlm-panorama-info {
        display: none !important;
     }
-    .img{
-      width: 80%;
+
+    /* Стили для карусели */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      margin: 15px auto;
+      overflow: hidden;
     }
+    .carousel-slide {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: none; /* Прячем все картинки по умолчанию */
+      border-radius: 4px;
+    }
+    .carousel-slide.active {
+      display: block; /* Показываем только текущую картинку */
+    }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 50%;
+    }
+    .carousel-btn:hover {
+      background: #000;
+    }
+    .carousel-prev { left: 10px; }
+    .carousel-next { right: 10px; }
   </style>
 </head>
 <body>
@@ -21,25 +55,80 @@
   
   <div id="panorama"></div>
 
-  <!-- Модальное окно для третьей метки -->
+  <!-- Обновленное модальное окно с каруселью -->
   <div id="customModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999; align-items:center; justify-content:center;">
-    <div style="background:#fff; padding:20px; border-radius:8px; max-width:400px; text-align:center; font-family:sans-serif;">
-      <h3 id="modalTitle">вышиванки</h3>
-       <p id="modalText"></p>
-      <img src="img1.jpg" class="img">
-      <button onclick="document.getElementById('customModal').style.display='none'">Закрыть</button>
+    <div style="background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; text-align:center; font-family:sans-serif; position:relative;">
+      <h3 id="modalTitle">Заголовок</h3>
+      <p id="modalText"></p>
+      
+      <!-- Блок карусели -->
+      <div class="carousel-container">
+        <div id="carouselImages"></div>
+        <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="carousel-btn carousel-next" onclick="changeSlide(1)">&#10095;</button>
+      </div>
+
+      <button onclick="document.getElementById('customModal').style.display='none'" style="margin-top:10px; padding: 8px 20px; cursor:pointer;">Закрыть</button>
     </div>
   </div>
 
   <script>
-    // 1. Сначала объявляем функцию для модального окна
+    let currentSlideIndex = 0;
+    let totalSlides = 0;
+
+    // 1. Функция открытия модального окна и генерации карусели
     function openModal(event, args) {
-      document.getElementById('modalTitle').innerText = args.title;
-      document.getElementById('modalText').innerText = args.description;
+      const titleEl = document.getElementById('modalTitle');
+      const textEl = document.getElementById('modalText');
+      const imagesContainer = document.getElementById('carouselImages');
+
+      if (titleEl) titleEl.innerText = args.title;
+      if (textEl) textEl.innerText = args.description || "";
+      
+      // Очищаем старые картинки из карусели
+      imagesContainer.innerHTML = "";
+      currentSlideIndex = 0;
+      totalSlides = args.images.length;
+
+      // Генерируем теги <img> для переданного массива картинок
+      args.images.forEach((imgUrl, index) => {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.className = 'carousel-slide';
+        if (index === 0) img.classList.add('active'); // Первой картинке даем класс active
+        imagesContainer.appendChild(img);
+      });
+
+      // Показываем кнопки управления, только если картинок больше одной
+      const prevBtn = document.querySelector('.carousel-prev');
+      const nextBtn = document.querySelector('.carousel-next');
+      if (totalSlides <= 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+      } else {
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+      }
+
       document.getElementById('customModal').style.display = 'flex';
     }
 
-    // 2. Инициализируем плеер ОДИН раз со всеми объединенными настройками
+    // 2. Функция переключения слайдов (вперед/назад)
+    function changeSlide(direction) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      if (slides.length === 0) return;
+
+      // Снимаем класс active с текущего слайда
+      slides[currentSlideIndex].classList.remove('active');
+
+      // Вычисляем индекс нового слайда по кругу
+      currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+
+      // Добавляем класс active новому слайду
+      slides[currentSlideIndex].classList.add('active');
+    }
+
+    // 3. Инициализируем плеер
     pannellum.viewer('panorama', {
       type: "equirectangular",
       panorama: "./444.jpg",
@@ -48,7 +137,6 @@
       title: "My Virtual Tour",
       author: "Your Name",
       
-      // Настройки отображения для формата 1:3
       haov: 360,
       vaov: 120,
       avoidShowingBackground: true,
@@ -58,38 +146,30 @@
       maxYaw: 170,  
       maxHfov: 90,
       hfov: 80,
-
-      // Настройки для удобного определения координат (удалите/выключите после настройки)
       hotSpotDebug: true,
-      //draggable: false,
 
-      // Весь массив меток теперь находится внутри конфигурации плеера
       hotSpots: [
         {
-          // 1. Всплывающая текстовая подсказка при наведении
           pitch: 5,
           yaw: 10,
           type: "info",
-          text: "Всплывающая подсказка при наведении курсора"
+          text: "Всплывающая подсказка"
         },
         {
-          // 2. Метка со ссылкой на другой сайт или страницу
-          pitch: -10,
-          yaw: 45,
-          type: "info",
-          text: "Перейти на сайт (откроется в новой вкладке)",
-          URL: "https://example.com"
-        },
-        {
-          // 3. Метка, открывающая всплывающее модальное окно по клику
           pitch: 3.9,
           yaw: -145,
           type: "info",
-          text: "Нажмите, чтобы открыть окно",
+          text: "Нажмите, чтобы открыть карусель",
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
-            title: "вышиванка",
-            description: "Здесь может быть подробный текст, фото, кнопка заказа или схема проезда."
+            title: "Коллекция вышиванок",
+            description: "Ниже представлены фотографии экспонатов:",
+            // ВАЖНО: Передаем массив картинок для карусели этой метки
+            images: [
+              "img1.jpg",
+              "img2.jpg",
+              "img3.jpg"
+            ]
           }
         }
       ]
