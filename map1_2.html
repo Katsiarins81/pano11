@@ -315,8 +315,8 @@
      //   },
         {
           // 2. Метка со ссылкой на другой сайт или страницу
-          pitch: 1,
-          yaw: -71,
+          pitch: -13,
+          yaw: -104,
           type: "info",
           text: "Перейти на сайт (откроется в новой вкладке)",
           URL: "https://katsiarins81.github.io/pano11/map2.html"
@@ -337,11 +337,25 @@
               "img3.jpg",
               "img4.jpg",
               "img5.jpg",
-              "img6.jpg",
-               "img7.jpg"
+              "img6.jpg"
             ]
           }
-        }
+        },
+         {
+          // 3. Метка, открывающая всплывающее модальное окно по клику
+          pitch: 15,
+          yaw: -62,
+          type: "info",
+          text: "Нажмите, чтобы открыть карусель",
+          clickHandlerFunc: openModal,
+          clickHandlerArgs: {
+            title: "Тканые рушники",
+            description: "Ниже представлены фотографии экспонатов:",
+            images: [
+              "img9.jpg",
+             
+            ]
+          }
        
       ]
     });
