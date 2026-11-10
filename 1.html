@@ -1,1 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdn.pannellum.org/2.5/pannellum.css"/>
+  <script type="text/javascript" src="https://cdn.pannellum.org/2.5/pannellum.js"></script>
+  <style>
+    #panorama { width: 100vw; height: 100vh; }
+    body { margin: 0; }
+    .pnlm-panorama-info {
+       display: none !important;
+    }
+
+    /* Стили для генплана и кнопки сворачивания */
+    .plan-wrapper {
+      position: absolute;
+      top: 20px;
+      left: 50px;
+      z-index: 100;
+      font-family: sans-serif;
+    }
+    .plan {
+      width: 300px;
+      height: 190px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+      transition: all 0.3s ease-in-out; /* Плавная анимация скрытия */
+    }
+    .plan img {
+      width: 100%;
+      height: 120%;
+    }
+    /* Класс, который будет добавляться при скрытии */
+    .plan.hidden {
+      width: 0px;
+      height: 0px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toggle-plan-btn {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #8f0606;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 101;
+    }
+    .toggle-plan-btn:hover {
+      background: #000;
+    }
+
+    /* Стили для карусели */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      margin: 15px auto;
+      overflow: hidden;
+    }
+    .carousel-slide {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: none; 
+      border-radius: 4px;
+    }
+    .carousel-slide.active {
+      display: block; 
+    }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 50%;
+    }
+    .carousel-btn:hover {
+      background: #000;
+    }
+    .carousel-prev { left: 10px; }
+    .carousel-next { right: 10px; }
+  #svg-img{
+    width:100%;
+    height: 120%;
+  </style>
+</head>
+<body>
+  <!-- Контейнер для генплана и его кнопки управления -->
+  <div class="plan-wrapper">
+    <button class="toggle-plan-btn" onclick="togglePlan()">🗺️ Скрыть карту</button>
+    <div id="planContent" class="plan">
+      <svg id="svg-img" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 229.06 123.44">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11 {
+        stroke: #820606;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        stroke-width: .44px;
+      }
+
+      .cls-2, .cls-3, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-11 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        stroke-width: .51px;
+      }
+
+      .cls-4, .cls-10 {
+        fill: none;
+      }
+
+      .cls-5 {
+        stroke-width: .29px;
+      }
+
+      .cls-6 {
+        stroke-width: .25px;
+      }
+
+      .cls-7 {
+        stroke-width: .46px;
+      }
+
+      .cls-8 {
+        stroke-width: .25px;
+      }
+
+      .cls-12 {
+        letter-spacing: 0em;
+      }
+
+      .cls-9 {
+        stroke-width: .59px;
+      }
+
+      .cls-13 {
+        letter-spacing: 0em;
+      }
+
+      .cls-14 {
+        letter-spacing: 0em;
+      }
+
+      .cls-11 {
+        stroke-width: .25px;
+      }
+
+      .cls-15 {
+        letter-spacing: 0em;
+      }
+      .cls:hover{
+       fill: red;
+        transition: 1s;
+          }
+    </style>
+  </defs>
+  <rect class="cls-3" x=".5" y=".5" width="228.06" height="122.44"/>
+  <rect class="cls-6" x="40.38" y="1.3" width="125.45" height="58.72"/>
+  <rect class="cls-5" x="164.83" y="1.3" width="62.73" height="120.84"/>
+  <rect class="cls-8" x="1.3" y="1.3" width="39.08" height="120.84"/>
+  <rect class="cls-11" x="107.32" y="60.02" width="57.52" height="62.12"/>
+  <a href="map1.html"><circle id="_Эллипс1_" data-name="&amp;lt;Эллипс1&amp;gt;" class="cls cls-2" cx="196.21" cy="57.31" r="13.9"/></a>
+  <a href="map2.html"><circle id="_Эллипс2_" data-name="&amp;lt;Эллипс2&amp;gt;" class="cls cls-7" cx="96.04" cy="30.66" r="13.95"/></a>
+  <a href="map3.html"><circle id="_Эллипс3_" data-name="&amp;lt;Эллипс3&amp;gt;" class="cls cls-9" cx="21.03" cy="53.89" r="13.83"/></a>
+  <text class="cls-1" transform="translate(192.99 61.72)"><tspan x="0" y="0">1</tspan></text>
+  <text class="cls-1" transform="translate(93.5 34.18)"><tspan x="0" y="0">2</tspan></text>
+  <text class="cls-1" transform="translate(18.55 57.31)"><tspan x="0" y="0">3</tspan></text>
+  <text class="cls-1" transform="translate(57.37 87.56)"><tspan class="cls-12" x="0" y="0">к</tspan><tspan x="5.87" y="0">а</tspan><tspan class="cls-13" x="11.65" y="0">с</tspan><tspan class="cls-14" x="16.96" y="0">с</tspan><tspan class="cls-15" x="22.37" y="0">а</tspan></text>
+  <line class="cls-10" x1="164.83" y1="96.49" x2="164.83" y2="115.93"/>
+  <line class="cls-10" x1="107.32" y1="97.69" x2="107.32" y2="118.14"/>
+  <line class="cls-10" x1="164.83" y1="35.99" x2="164.83" y2="53.41"/>
+  <line class="cls-10" x1="81.46" y1="60.02" x2="99.1" y2="60.02"/>
+  <line class="cls-10" x1="40.38" y1="24.95" x2="40.38" y2="40.78"/>
+  <line class="cls-10" x1="40.38" y1="103.11" x2="40.38" y2="118.14"/>
+  <circle class="cls-4" cx="21.03" cy="53.89" r="12.04"/>
+  <circle class="cls-4" cx="96.04" cy="30.66" r="12.04"/>
+  <circle id="_Эллипс1_-2" data-name="&amp;lt;Эллипс1&amp;gt;" class="cls-4" cx="196.19" cy="57.31" r="12.04"/>
+</svg>
+    </div>
+  </div>
+  
+  <div id="panorama"></div>
+
+  <!-- Модальное окно с каруселью -->
+  <div id="customModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; text-align:center; font-family:sans-serif; position:relative;">
+      <h3 id="modalTitle">Заголовок</h3>
+      <p id="modalText"></p>
+      
+      <!-- Блок карусели -->
+      <div class="carousel-container">
+        <div id="carouselImages"></div>
+        <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)">❮</button>
+        <button class="carousel-btn carousel-next" onclick="changeSlide(1)">❯</button>
+      </div>
+
+      <button onclick="document.getElementById('customModal').style.display='none'" style="margin-top:10px; padding: 8px 20px; cursor:pointer;">Закрыть</button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlideIndex = 0;
+    let totalSlides = 0;
+
+    // Функция переключения видимости генплана
+    function togglePlan() {
+      const plan = document.getElementById('planContent');
+      const btn = document.querySelector('.toggle-plan-btn');
+      
+      if (plan.classList.contains('hidden')) {
+        plan.classList.remove('hidden');
+        btn.innerHTML = "🗺️ Скрыть карту";
+        btn.style.position = "absolute"; // Возвращаем поверх карты
+      } else {
+        plan.classList.add('hidden');
+        btn.innerHTML = "🗺️ Показать карту";
+        btn.style.position = "fixed"; // Оставляем зафиксированной на экране
+      }
+    }
+
+    // Функция открытия модального окна и генерации карусели
+    function openModal(event, args) {
+      const titleEl = document.getElementById('modalTitle');
+      const textEl = document.getElementById('modalText');
+      const imagesContainer = document.getElementById('carouselImages');
+
+      if (titleEl) titleEl.innerText = args.title;
+      if (textEl) textEl.innerText = args.description || "";
+      
+      imagesContainer.innerHTML = "";
+      currentSlideIndex = 0;
+      totalSlides = args.images.length;
+
+      args.images.forEach((imgUrl, index) => {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.className = 'carousel-slide';
+        if (index === 0) img.classList.add('active');
+        imagesContainer.appendChild(img);
+      });
+
+      const prevBtn = document.querySelector('.carousel-prev');
+      const nextBtn = document.querySelector('.carousel-next');
+      if (totalSlides <= 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+      } else {
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+      }
+
+      document.getElementById('customModal').style.display = 'flex';
+    }
+
+    // Функция переключения слайдов (вперед/назад)
+    function changeSlide(direction) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      if (slides.length === 0) return;
+
+      slides[currentSlideIndex].classList.remove('active');
+      currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+      slides[currentSlideIndex].classList.add('active');
+    }
+
+    // Инициализируем плеер
+    pannellum.viewer('panorama', {
+      type: "equirectangular",
+      panorama: "./555.jpg",
+      autoLoad: true,
+      compass: true,
+      title: "My Virtual Tour",
+      author: "Your Name",
+      
+      haov: 360,
+      vaov: 120,
+      avoidShowingBackground: true,
+      minPitch: -60,
+      maxPitch: 60,
+      minYaw: -170, 
+      maxYaw: 170,  
+      maxHfov: 90,
+      hfov: 80,
+      hotSpotDebug: true,
+
+      hotSpots: [
+        {
+           // 1. Всплывающая текстовая подсказка при наведении
+          pitch: 5,
+          yaw: 10,
+          type: "info",
+          text: "Всплывающая подсказка"
+        },
+        {
+          // 2. Метка со ссылкой на другой сайт или страницу
+          pitch: -10,
+          yaw: 45,
+          type: "info",
+          text: "Перейти на сайт (откроется в новой вкладке)",
+          URL: "https://example.com"
+        },
+        {
+          // 3. Метка, открывающая всплывающее модальное окно по клику
+          pitch: 3.9,
+          yaw: -145,
+          type: "info",
+          text: "Нажмите, чтобы открыть карусель",
+          clickHandlerFunc: openModal,
+          clickHandlerArgs: {
+            title: "Коллекция вышиванок",
+            description: "Ниже представлены фотографии экспонатов:",
+            images: [
+              "img1.jpg",
+              "img2.jpg",
+              "img3.jpg"
+            ]
+          }
+        }
+      ]
+    });
+  </script>
+</body>
+</html>
 
