@@ -347,7 +347,7 @@
       maxHfov: 90,
       hfov: 80,
    //   hotSpotDebug: true,
-
+    }
 // 1. Объявляем функцию, которая получает сам DOM-элемент метки (hotSpotDiv) и ваши аргументы
 function setupHotspot(hotSpotDiv, args) {
   // Добавляем любые классы напрямую в DOM
@@ -359,7 +359,7 @@ function setupHotspot(hotSpotDiv, args) {
     hotSpotDiv.style.height = args.size + 'px';
     hotSpotDiv.style.backgroundSize = Math.round(args.size * 0.6) + 'px';
   }
-     
+}
       hotSpots: [
        // {
            // 1. Всплывающая текстовая подсказка при наведении
