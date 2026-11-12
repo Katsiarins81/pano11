@@ -95,6 +95,58 @@
   #svg-img{
     width:100%;
     height: 120%;
+
+
+      /* --- СТИЛИ ДЛЯ КАСУТОМНЫХ УКАЗАТЕЛЕЙ (МЕТОК) --- */
+    
+    /* Общие базовые стили для новых меток */
+    .custom-hotspot {
+      width: 36px !important;   /* Увеличиваем размер (было 26px) */
+      height: 36px !important;
+      border-radius: 50%;
+      background-size: 24px;   /* Размер иконки внутри */
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    /* Эффект пульсации (создаем анимированную волну вокруг метки) */
+    .custom-hotspot::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px #fff; /* Цвет волны пульсации */
+      animation: pulse-wave 1.5s infinite ease-out;
+      opacity: 0;
+    }
+
+    @keyframes pulse-wave {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    /* 1. Указатель-Палец для карусели */
+    .hotspot-carousel {
+      background-color: #ff9800; /* Оранжевый фон */
+      /* Используем SVG-иконку руки/пальца прямо в CSS */
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="white"><path d="M11 1a1 1 0 0 1 2 0v11.5a.5.5 0 0 0 1 0V5.5a1 1 0 0 1 2 0v6.5a.5.5 0 0 0 1 0v-5a1 1 0 0 1 2 0v6.5a.5.5 0 0 0 1 0v-4a1 1 0 0 1 2 0v7a8 8 0 0 1-8 8H11a6 6 0 0 1-6-6v-5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v2.5a.5.5 0 0 0 1 0V1z"/></svg>');
+    }
+
+    /* 2. Указатель-Стрелочка для перехода на другую страницу */
+    .hotspot-arrow {
+      background-color: #007bff; /* Синий фон */
+      /* Используем SVG-иконку стрелки прямо в CSS */
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="white"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z"/></svg>');
+    }
+
+    /* Исправление отображения текста подсказки для кастомных классов */
+    .custom-hotspot:hover span {
+      visibility: visible;
+    }
+
+    /* ----------------------------------------------- */
   </style>
 </head>
 <body>
@@ -318,6 +370,7 @@
           yaw: -151,
           type: "info",
           text: "Перейти на сайт (откроется в новой вкладке)",
+          cssClass: "custom-hotspot hotspot-arrow",
           URL: "https://katsiarins81.github.io/pano11/index.html"
         },
          {
@@ -325,6 +378,7 @@
           pitch: 3,
           yaw: 75,
           type: "info",
+          cssClass: "custom-hotspot hotspot-arrow",
           text: "Перейти на сайт (откроется в новой вкладке)",
           URL: "https://katsiarins81.github.io/pano11/map2.html"
         },
@@ -334,6 +388,7 @@
           yaw: 11,
           type: "info",
           text: "Нажмите, чтобы открыть карусель",
+          cssClass: "custom-hotspot hotspot-carousel", 
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "Тканые рушники",
@@ -355,6 +410,7 @@
           yaw: -92,
           type: "info",
           text: "Нажмите, чтобы открыть карусель",
+          cssClass: "custom-hotspot hotspot-carousel", 
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "Тканые рушники",
@@ -373,6 +429,7 @@
           yaw: -50,
           type: "info",
           text: "Нажмите, чтобы открыть карусель",
+           cssClass: "custom-hotspot hotspot-carousel", 
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "Тканые рушники",
