@@ -100,7 +100,7 @@
       /* --- СТИЛИ ДЛЯ КАСУТОМНЫХ УКАЗАТЕЛЕЙ (МЕТОК) --- */
     
     /* Общие базовые стили для новых меток */
-    .custom-hotspot {
+    .pnlm-hotspot {
       width: 36px !important;   /* Увеличиваем размер (было 26px) */
       height: 36px !important;
       border-radius: 50%;
@@ -112,7 +112,7 @@
     }
 
     /* Эффект пульсации (создаем анимированную волну вокруг метки) */
-    .custom-hotspot::after {
+    .pnlm-hotspot::after {
       content: '';
       position: absolute;
       inset: -2px;
@@ -361,7 +361,7 @@
           pitch: -13,
           yaw: -151,
           type: "info",
-          cssClass: "custom-hotspot",
+         text: "выход",
           URL: "https://katsiarins81.github.io/pano11/index.html"
         },
          {
@@ -369,8 +369,7 @@
           pitch: 3,
           yaw: 75,
           type: "info",
-           cssClass: "custom-hotspot",
-          text: "Перейти на сайт (откроется в новой вкладке)",
+          text: "перейти во второй зал",
           URL: "https://katsiarins81.github.io/pano11/map2.html"
         },
         {
@@ -403,7 +402,7 @@
           text: "Нажмите, чтобы открыть карусель",
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
-            title: "Тканые рушники",
+            title: "ткацкие станки",
             description: "Ниже представлены фотографии экспонатов:",
             images: [
              
@@ -435,5 +434,20 @@
       ]
     });
   </script>
+  <style>
+     .pnlm-hotspot {
+    height: 50px !important;
+    width: 50px !important;
+    border-radius: 13px;
+}
+   .hotspot-arrow.pnlm-hotspot.pnlm-info {
+    background-position: 0 160px !important;
+    background-size: 110% !important;
+}
+     hotspot-carousel .pnlm-hotspot.pnlm-info {
+    background-position: 0 220px !important;
+    background-size: 110% !important;
+}
+  </style>
 </body>
 </html>
