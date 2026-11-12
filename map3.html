@@ -10,6 +10,7 @@
     .pnlm-panorama-info {
        display: none !important;
     }
+
     /* Стили для генплана и кнопки сворачивания */
     .plan-wrapper {
       position: absolute;
@@ -25,13 +26,12 @@
       border-radius: 4px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       overflow: hidden;
-      transition: all 0.3s ease-in-out; /* Плавная анимация скрытия */
+      transition: all 0.3s ease-in-out;
     }
     .plan img {
       width: 100%;
       height: 120%;
     }
-    /* Класс, который будет добавляться при скрытии */
     .plan.hidden {
       width: 0px;
       height: 0px;
@@ -68,11 +68,11 @@
       width: 100%;
       height: 240px;
       object-fit: cover;
-      display: none; 
+      display: none;
       border-radius: 4px;
     }
     .carousel-slide.active {
-      display: block; 
+      display: block;
     }
     .carousel-btn {
       position: absolute;
@@ -92,10 +92,51 @@
     }
     .carousel-prev { left: 10px; }
     .carousel-next { right: 10px; }
-  #svg-img{
-    width:100%;
-    height: 120%;
-  }
+
+    #svg-img{
+      width:100%;
+      height: 120%;
+    }
+
+    /* ===== Стили хотспотов и кастомных tooltip ===== */
+    .pnlm-hotspot {
+      height: 50px !important;
+      width: 50px !important;
+      border-radius: 50%;
+    }
+    .hotspot-arrow{
+      background-position: 0 160px !important;
+      background-size: 110% !important;
+    }
+    .hotspot-carousel {
+      background-position: 0 220px !important;
+      background-size: 110% !important;
+    }
+
+    /* Кастомный tooltip, который создаётся вручную в setupHotspot */
+    .custom-hotspot .pnlm-tooltip {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .custom-hotspot:hover .pnlm-tooltip {
+      display: block;
+    }
+    .custom-hotspot .pnlm-tooltip span {
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: sans-serif;
+      font-size: 13px;
+      line-height: 1.3;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
@@ -201,7 +242,7 @@
 </svg>
     </div>
   </div>
-  
+
   <div id="panorama"></div>
 
   <!-- Модальное окно с каруселью -->
@@ -209,7 +250,7 @@
     <div style="background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; text-align:center; font-family:sans-serif; position:relative;">
       <h3 id="modalTitle">Заголовок</h3>
       <p id="modalText"></p>
-      
+
       <!-- Блок карусели -->
       <div class="carousel-container">
         <div id="carouselImages"></div>
@@ -229,15 +270,15 @@
     function togglePlan() {
       const plan = document.getElementById('planContent');
       const btn = document.querySelector('.toggle-plan-btn');
-      
+
       if (plan.classList.contains('hidden')) {
         plan.classList.remove('hidden');
         btn.innerHTML = "🗺️ Скрыть карту";
-        btn.style.position = "absolute"; // Возвращаем поверх карты
+        btn.style.position = "absolute";
       } else {
         plan.classList.add('hidden');
         btn.innerHTML = "🗺️ Показать карту";
-        btn.style.position = "fixed"; // Оставляем зафиксированной на экране
+        btn.style.position = "fixed";
       }
     }
 
@@ -249,7 +290,7 @@
 
       if (titleEl) titleEl.innerText = args.title;
       if (textEl) textEl.innerText = args.description || "";
-      
+
       imagesContainer.innerHTML = "";
       currentSlideIndex = 0;
       totalSlides = args.images.length;
@@ -284,18 +325,35 @@
       currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
       slides[currentSlideIndex].classList.add('active');
     }
-// 1. Объявляем функцию, которая получает сам DOM-элемент метки (hotSpotDiv) и ваши аргументы
-function setupHotspot(hotSpotDiv, args) {
-  // Добавляем любые классы напрямую в DOM
-  hotSpotDiv.classList.add('custom-hotspot', args.extraClass);
 
-  // При необходимости задаём индивидуальный размер прямо через JS
-  if (args.size) {
-    hotSpotDiv.style.width = args.size + 'px';
-    hotSpotDiv.style.height = args.size + 'px';
-    hotSpotDiv.style.backgroundSize = Math.round(args.size * 0.6) + 'px';
-  }
-}
+    // Функция создания кастомного хотспота + ручное создание tooltip
+    function setupHotspot(hotSpotDiv, args) {
+      // 1. Классы и размеры
+      hotSpotDiv.classList.add('custom-hotspot');
+      if (args.extraClass) {
+        hotSpotDiv.classList.add(args.extraClass);
+      }
+      if (args.size) {
+        hotSpotDiv.style.width  = args.size + 'px';
+        hotSpotDiv.style.height = args.size + 'px';
+        hotSpotDiv.style.backgroundSize = Math.round(args.size * 0.6) + 'px';
+      }
+
+      // 2. Вручную создаём стандартную структуру tooltip Pannellum:
+      //    <div class="pnlm-tooltip"><span>текст</span></div>
+      const tipText = (args && (args.label || args.text)) ? (args.label || args.text) : '';
+      if (tipText) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'pnlm-tooltip';
+
+        const span = document.createElement('span');
+        span.textContent = tipText;
+        tooltip.appendChild(span);
+
+        hotSpotDiv.appendChild(tooltip);
+      }
+    }
+
     // Инициализируем плеер
     pannellum.viewer('panorama', {
       type: "equirectangular",
@@ -304,68 +362,58 @@ function setupHotspot(hotSpotDiv, args) {
       compass: true,
       title: "My Virtual Tour",
       author: "Your Name",
-      
+
       haov: 360,
       vaov: 120,
       avoidShowingBackground: true,
       minPitch: -60,
       maxPitch: 60,
-      minYaw: -170, 
-      maxYaw: 170,  
+      minYaw: -170,
+      maxYaw: 170,
       maxHfov: 90,
       hfov: 80,
-   //   hotSpotDebug: true,
-    
+      // hotSpotDebug: true,
 
       hotSpots: [
-       // {
-           // 1. Всплывающая текстовая подсказка при наведении
-        //  pitch: 5,
-       //   yaw: 10,
-       //   type: "info",
-       //   text: "Всплывающая подсказка"
-     //   },
         {
-          // 2.1 Метка со ссылкой на другой сайт или страницу
+          // 1. Переход в начало
           pitch: -13,
           yaw: -151,
           text: "Перейти в начало",
           createTooltipFunc: setupHotspot,
           createTooltipArgs: {
             extraClass: 'hotspot-arrow',
-            size: 55, 
-             label: 'Перейти в начало'
+            size: 55,
+            label: 'Перейти в начало'
           },
-         
           URL: "https://katsiarins81.github.io/pano11/index.html"
         },
-         {
-          // 2.2 Метка со ссылкой на другой сайт или страницу
+        {
+          // 2. Переход во второй зал
           pitch: 3,
           yaw: 75,
           text: 'Перейти во второй зал',
-           createTooltipFunc: setupHotspot,
-      createTooltipArgs: {
-        extraClass: 'hotspot-arrow',
-         size: 55, 
-           label: ''
-      },
-          
+          createTooltipFunc: setupHotspot,
+          createTooltipArgs: {
+            extraClass: 'hotspot-arrow',
+            size: 55,
+            label: 'Перейти во второй зал'
+          },
           URL: "https://katsiarins81.github.io/pano11/map2.html"
         },
         {
-          // 3. Метка, открывающая всплывающее модальное окно по клику
+          // 3. Карусель: тканые рушники
           pitch: 25,
           yaw: 11,
           type: "info",
           text: "Нажмите, чтобы открыть карусель",
-         createTooltipFunc: setupHotspot,
-         createTooltipArgs: {
-           extraClass: 'hotspot-carousel',
-            size: 55, 
-           label: ''
-         },
-          clickHandlerFunc: openModal, 
+          createTooltipFunc: setupHotspot,
+          createTooltipArgs: {
+            extraClass: 'hotspot-carousel',
+            size: 55,
+            label: 'Тканые рушники'
+          },
+          clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "Тканые рушники",
             description: "Ниже представлены фотографии экспонатов:",
@@ -381,71 +429,52 @@ function setupHotspot(hotSpotDiv, args) {
           }
         },
         {
-          // 4. Метка, открывающая всплывающее модальное окно по клику
+          // 4. Карусель: ткацкие станки
           pitch: -36,
           yaw: -92,
           text: "Нажмите, чтобы открыть карусель",
-         createTooltipFunc: setupHotspot,
-         createTooltipArgs: {
-           extraClass: 'hotspot-carousel',
-            size: 55, 
-           label: ''
-         },
+          createTooltipFunc: setupHotspot,
+          createTooltipArgs: {
+            extraClass: 'hotspot-carousel',
+            size: 55,
+            label: 'Ткацкие станки'
+          },
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "ткацкие станки",
             description: "Ниже представлены фотографии экспонатов:",
             images: [
-             
               "img21.jpg",
               "img22.jpg",
               "img26.jpg"
             ]
           }
         },
-         {
-          // 5. Метка, открывающая всплывающее модальное окно по клику
+        {
+          // 5. Карусель: тканые рушники (вторая группа)
           pitch: 14,
           yaw: -50,
           type: "info",
           text: "Нажмите, чтобы открыть карусель",
-         createTooltipFunc: setupHotspot,
-         createTooltipArgs: {
-           extraClass: 'hotspot-carousel',
-           size: 55, 
-           label: ''
-         },
+          createTooltipFunc: setupHotspot,
+          createTooltipArgs: {
+            extraClass: 'hotspot-carousel',
+            size: 55,
+            label: 'Тканые рушники'
+          },
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
             title: "Тканые рушники",
             description: "Ниже представлены фотографии экспонатов:",
             images: [
-             
               "img23.jpg",
               "img24.jpg",
               "img25.jpg"
             ]
           }
         }
-       
       ]
     });
   </script>
-  <style>
-     .pnlm-hotspot {
-    height: 50px !important;
-    width: 50px !important;
-    border-radius: 50%;
-}
-   .hotspot-arrow{
-    background-position: 0 160px !important;
-    background-size: 110% !important;
-}
-    .hotspot-carousel {
-    background-position: 0 220px !important;
-    background-size: 110% !important;
-}
-    
-  </style>
 </body>
 </html>
