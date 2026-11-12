@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://cdn.pannellum.org/2.5/pannellum.css"/>
   <script type="text/javascript" src="https://cdn.pannellum.org/2.5/pannellum.js"></script>
-  
   <style>
     #panorama { width: 100vw; height: 100vh; }
     body { margin: 0; }
@@ -26,12 +25,13 @@
       border-radius: 4px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       overflow: hidden;
-      transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out; /* Плавная анимация скрытия */
     }
     .plan img {
       width: 100%;
       height: 120%;
     }
+    /* Класс, который будет добавляться при скрытии */
     .plan.hidden {
       width: 0px;
       height: 0px;
@@ -92,57 +92,42 @@
     }
     .carousel-prev { left: 10px; }
     .carousel-next { right: 10px; }
-    
-    #svg-img {
-      width: 100%;
-      height: 120%;
-    }
+  #svg-img{
+    width:100%;
+    height: 120%;
 
-    /* --- СТИЛИ ДЛЯ КАСТОМНЫХ УКАЗАТЕЛЕЙ (МЕТОК) --- */
+
+      /* --- СТИЛИ ДЛЯ КАСУТОМНЫХ УКАЗАТЕЛЕЙ (МЕТОК) --- */
+    
+    /* Общие базовые стили для новых меток */
     .custom-hotspot {
-      width: 40px !important;   /* Увеличиваем размер */
-      height: 40px !important;
+      width: 36px !important;   /* Увеличиваем размер (было 26px) */
+      height: 36px !important;
       border-radius: 50%;
       background-size: 24px;   /* Размер иконки внутри */
       background-repeat: no-repeat;
       background-position: center;
       cursor: pointer;
       position: relative;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    /* Эффект пульсации */
+    /* Эффект пульсации (создаем анимированную волну вокруг метки) */
     .custom-hotspot::after {
       content: '';
       position: absolute;
-      inset: -3px;
+      inset: -2px;
       border-radius: 50%;
-      box-shadow: 0 0 0 2px #fff;
+      box-shadow: 0 0 0 2px #fff; /* Цвет волны пульсации */
       animation: pulse-wave 1.5s infinite ease-out;
       opacity: 0;
     }
 
     @keyframes pulse-wave {
-      0% { transform: scale(0.7); opacity: 1; }
-      100% { transform: scale(1.7); opacity: 0; }
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
     }
 
-    /* Иконка пальца для карусели */
-    .hotspot-carousel {
-      background-color: #ff9800;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="white"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>');
-    }
-
-    /* Иконка стрелки для перехода на другую страницу */
-    .hotspot-arrow {
-      background-color: #007bff;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="white"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z"/></svg>');
-    }
-
-    /* Показываем всплывающую подсказку при наведении */
-    .custom-hotspot:hover span {
-      visibility: visible;
-    }
+   
   </style>
 </head>
 <body>
@@ -150,7 +135,7 @@
   <div class="plan-wrapper">
     <button class="toggle-plan-btn" onclick="togglePlan()">🗺️ Скрыть карту</button>
     <div id="planContent" class="plan">
-      <svg id="svg-img" data-name="Слой 1" xmlns="http://w3.org" viewBox="0 0 229.06 123.44">
+      <svg id="svg-img" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 229.06 123.44">
   <defs>
     <style>
       .cls-1 {
@@ -221,7 +206,7 @@
       .cls:hover{
        fill: red;
         transition: 1s;
-      }
+          }
     </style>
   </defs>
   <rect class="cls-3" x=".5" y=".5" width="228.06" height="122.44"/>
@@ -280,11 +265,11 @@
       if (plan.classList.contains('hidden')) {
         plan.classList.remove('hidden');
         btn.innerHTML = "🗺️ Скрыть карту";
-        btn.style.position = "absolute";
+        btn.style.position = "absolute"; // Возвращаем поверх карты
       } else {
         plan.classList.add('hidden');
         btn.innerHTML = "🗺️ Показать карту";
-        btn.style.position = "fixed";
+        btn.style.position = "fixed"; // Оставляем зафиксированной на экране
       }
     }
 
@@ -306,125 +291,136 @@
         img.src = imgUrl;
         img.className = 'carousel-slide';
         if (index === 0) img.classList.add('active');
-    imagesContainer.appendChild(img);
-  });
+        imagesContainer.appendChild(img);
+      });
 
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
-
-  if (totalSlides <= 1) {
-    prevBtn.style.display = 'none';
-    nextBtn.style.display = 'none';
-  } else {
-    prevBtn.style.display = 'block';
-    nextBtn.style.display = 'block';
-  }
-
-  document.getElementById('customModal').style.display = 'flex';
-}
-
-// Функция переключения слайдов (вперед/назад)
-function changeSlide(direction) {
-  const slides = document.querySelectorAll('.carousel-slide');
-  if (slides.length === 0) return;
-
-  slides[currentSlideIndex].classList.remove('active');
-  currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
-  slides[currentSlideIndex].classList.add('active');
-}
-
-// Инициализируем плеер
-pannellum.viewer('panorama', {
-  type: "equirectangular",
-  panorama: "./map3.jpg",
-  autoLoad: true,
-  compass: true,
-  title: "My Virtual Tour",
-  author: "Your Name",
-
-  haov: 360,
-  vaov: 120,
-  avoidShowingBackground: true,
-  minPitch: -60,
-  maxPitch: 60,
-  minYaw: -170,
-  maxYaw: 170,
-  maxHfov: 90,
-  hfov: 80,
-
-  hotSpots: [
-    {
-      // 2.1 Метка со ссылкой (стрелка)
-      pitch: -13,
-      yaw: -151,
-      cssClass: "custom-hotspot hotspot-arrow",
-      URL: "https://katsiarins81.github.io/pano11/index.html"
-    },
-    {
-      // 2.2 Метка со ссылкой (стрелка)
-      pitch: 3,
-      yaw: 75,
-      cssClass: "custom-hotspot hotspot-arrow",
-      text: "Перейти на сайт (откроется в новой вкладке)",
-      URL: "https://katsiarins81.github.io/pano11/map2.html"
-    },
-    {
-      // 3. Метка карусели (палец)
-      pitch: 25,
-      yaw: 11,
-      cssClass: "custom-hotspot hotspot-carousel",
-      text: "Нажмите, чтобы открыть карусель",
-      clickHandlerFunc: openModal,
-      clickHandlerArgs: {
-        title: "Тканые рушники",
-        description: "Ниже представлены фотографии экспонатов:",
-        images: [
-          "img17.jpg",
-          "img18.jpg",
-          "img19.jpg",
-          "img20.jpg",
-          "img21.jpg",
-          "img22.jpg",
-          "img23.jpg"
-        ]
+      const prevBtn = document.querySelector('.carousel-prev');
+      const nextBtn = document.querySelector('.carousel-next');
+      if (totalSlides <= 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+      } else {
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
       }
-    },
-    {
-      // 4. Метка карусели (палец)
-      pitch: -36,
-      yaw: -92,
-      cssClass: "custom-hotspot hotspot-carousel",
-      text: "Нажмите, чтобы открыть карусель",
-      clickHandlerFunc: openModal,
-      clickHandlerArgs: {
-        title: "Тканые рушники",
-        description: "Ниже представлены фотографии экспонатов:",
-        images: [
-          "img21.jpg",
-          "img22.jpg",
-          "img26.jpg"
-        ]
-      }
-    },
-    {
-      // 5. Метка карусели (палец)
-      pitch: 14,
-      yaw: -50,
-      cssClass: "custom-hotspot hotspot-carousel",
-      text: "Нажмите, чтобы открыть карусель",
-      clickHandlerFunc: openModal,
-      clickHandlerArgs: {
-        title: "Тканые рушники",
-        description: "Ниже представлены фотографии экспонатов:",
-        images: [
-          "img23.jpg",
-          "img24.jpg",
-          "img25.jpg"
-        ]
-      }
+
+      document.getElementById('customModal').style.display = 'flex';
     }
-  ]
-});
+
+    // Функция переключения слайдов (вперед/назад)
+    function changeSlide(direction) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      if (slides.length === 0) return;
+
+      slides[currentSlideIndex].classList.remove('active');
+      currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+      slides[currentSlideIndex].classList.add('active');
+    }
+
+    // Инициализируем плеер
+    pannellum.viewer('panorama', {
+      type: "equirectangular",
+      panorama: "./map3.jpg",
+      autoLoad: true,
+      compass: true,
+      title: "My Virtual Tour",
+      author: "Your Name",
+      
+      haov: 360,
+      vaov: 120,
+      avoidShowingBackground: true,
+      minPitch: -60,
+      maxPitch: 60,
+      minYaw: -170, 
+      maxYaw: 170,  
+      maxHfov: 90,
+      hfov: 80,
+   //   hotSpotDebug: true,
+
+      hotSpots: [
+       // {
+           // 1. Всплывающая текстовая подсказка при наведении
+        //  pitch: 5,
+       //   yaw: 10,
+       //   type: "info",
+       //   text: "Всплывающая подсказка"
+     //   },
+        {
+          // 2.1 Метка со ссылкой на другой сайт или страницу
+          pitch: -13,
+          yaw: -151,
+          type: "info",
+          cssClass: "custom-hotspot hotspot-arrow",
+          URL: "https://katsiarins81.github.io/pano11/index.html"
+        },
+         {
+          // 2.2 Метка со ссылкой на другой сайт или страницу
+          pitch: 3,
+          yaw: 75,
+          type: "info",
+          text: "Перейти на сайт (откроется в новой вкладке)",
+          URL: "https://katsiarins81.github.io/pano11/map2.html"
+        },
+        {
+          // 3. Метка, открывающая всплывающее модальное окно по клику
+          pitch: 25,
+          yaw: 11,
+          type: "info",
+          text: "Нажмите, чтобы открыть карусель",
+          clickHandlerFunc: openModal,
+          clickHandlerArgs: {
+            title: "Тканые рушники",
+            description: "Ниже представлены фотографии экспонатов:",
+            images: [
+              "img17.jpg",
+              "img18.jpg",
+              "img19.jpg",
+              "img20.jpg",
+              "img21.jpg",
+              "img22.jpg",
+              "img23.jpg"
+            ]
+          }
+        },
+        {
+          // 4. Метка, открывающая всплывающее модальное окно по клику
+          pitch: -36,
+          yaw: -92,
+          type: "info",
+          text: "Нажмите, чтобы открыть карусель",
+          clickHandlerFunc: openModal,
+          clickHandlerArgs: {
+            title: "Тканые рушники",
+            description: "Ниже представлены фотографии экспонатов:",
+            images: [
+             
+              "img21.jpg",
+              "img22.jpg",
+              "img26.jpg"
+            ]
+          }
+        },
+         {
+          // 5. Метка, открывающая всплывающее модальное окно по клику
+          pitch: 14,
+          yaw: -50,
+          type: "info",
+          text: "Нажмите, чтобы открыть карусель",
+          clickHandlerFunc: openModal,
+          clickHandlerArgs: {
+            title: "Тканые рушники",
+            description: "Ниже представлены фотографии экспонатов:",
+            images: [
+             
+              "img23.jpg",
+              "img24.jpg",
+              "img25.jpg"
+            ]
+          }
+        }
+       
+      ]
+    });
   </script>
 </body>
 </html>
