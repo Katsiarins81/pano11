@@ -14,7 +14,6 @@
     /* Стили для генплана и кнопки сворачивания */
     .plan-wrapper {
       position: absolute;
-      
       top: 20px;
       left: 50px;
       z-index: 100;
@@ -27,13 +26,12 @@
       border-radius: 4px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       overflow: hidden;
-      transition: all 0.3s ease-in-out; /* Плавная анимация скрытия */
+      transition: all 0.3s ease-in-out;
     }
     .plan img {
       width: 100%;
       height: 120%;
     }
-    /* Класс, который будет добавляться при скрытии */
     .plan.hidden {
       width: 0px;
       height: 0px;
@@ -70,11 +68,11 @@
       width: 100%;
       height: 240px;
       object-fit: cover;
-      display: none; 
+      display: none;
       border-radius: 4px;
     }
     .carousel-slide.active {
-      display: block; 
+      display: block;
     }
     .carousel-btn {
       position: absolute;
@@ -94,9 +92,74 @@
     }
     .carousel-prev { left: 10px; }
     .carousel-next { right: 10px; }
-  #svg-img{
-    width:100%;
-    height: 120%;
+
+    #svg-img{
+      width:100%;
+      height: 120%;
+    }
+
+    /* ===== Стили хотспотов и кастомных tooltip ===== */
+    .pnlm-hotspot {
+      height: 50px !important;
+      width: 50px !important;
+      border-radius: 50%;
+    }
+    .hotspot-arrow{
+      background-position: 0 160px !important;
+      background-size: 110% !important;
+    }
+    .hotspot-carousel {
+      background-position: 0 220px !important;
+      background-size: 110% !important;
+    }
+
+    /* Кастомный tooltip, который создаётся вручную в setupHotspot */
+    .custom-hotspot .pnlm-tooltip {
+      display: none;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: wrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .custom-hotspot:hover .pnlm-tooltip {
+      display: block;
+    }
+    .custom-hotspot .pnlm-tooltip span {
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: sans-serif;
+      font-size: 13px;
+      line-height: 1.3;
+      display: inline-block;
+    }
+    div.pnlm-tooltip span {
+    visibility: visible !important;
+    position: absolute;
+    border-radius: 3px;
+    background-color: rgba(0,0,0,0.7);
+    color: #fff;
+    text-align: center;
+    padding: 5px 10px;
+    cursor: default;
+    margin: -60px !important;
+}
+.custom-hotspot .pnlm-tooltip span:after {
+    content: '' !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-width: 10px !important;
+    border-style: solid !important;
+    border-color: rgba(0,0,0,0.7) transparent transparent transparent;
+    bottom: -20px !important;
+    left: -10px !important;
+    margin: 0 50% !important;
+    display: block !important;
+}
   </style>
 </head>
 <body>
@@ -202,7 +265,7 @@
 </svg>
     </div>
   </div>
-  
+
   <div id="panorama"></div>
 
   <!-- Модальное окно с каруселью -->
@@ -210,7 +273,7 @@
     <div style="background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; text-align:center; font-family:sans-serif; position:relative;">
       <h3 id="modalTitle">Заголовок</h3>
       <p id="modalText"></p>
-      
+
       <!-- Блок карусели -->
       <div class="carousel-container">
         <div id="carouselImages"></div>
@@ -230,15 +293,15 @@
     function togglePlan() {
       const plan = document.getElementById('planContent');
       const btn = document.querySelector('.toggle-plan-btn');
-      
+
       if (plan.classList.contains('hidden')) {
         plan.classList.remove('hidden');
         btn.innerHTML = "🗺️ Скрыть карту";
-        btn.style.position = "absolute"; // Возвращаем поверх карты
+        btn.style.position = "absolute";
       } else {
         plan.classList.add('hidden');
         btn.innerHTML = "🗺️ Показать карту";
-        btn.style.position = "fixed"; // Оставляем зафиксированной на экране
+        btn.style.position = "fixed";
       }
     }
 
@@ -250,7 +313,7 @@
 
       if (titleEl) titleEl.innerText = args.title;
       if (textEl) textEl.innerText = args.description || "";
-      
+
       imagesContainer.innerHTML = "";
       currentSlideIndex = 0;
       totalSlides = args.images.length;
@@ -286,6 +349,34 @@
       slides[currentSlideIndex].classList.add('active');
     }
 
+    // Функция создания кастомного хотспота + ручное создание tooltip
+    function setupHotspot(hotSpotDiv, args) {
+      // 1. Классы и размеры
+      hotSpotDiv.classList.add('custom-hotspot');
+      if (args.extraClass) {
+        hotSpotDiv.classList.add(args.extraClass);
+      }
+      if (args.size) {
+        hotSpotDiv.style.width  = args.size + 'px';
+        hotSpotDiv.style.height = args.size + 'px';
+        hotSpotDiv.style.backgroundSize = Math.round(args.size * 0.6) + 'px';
+      }
+
+      // 2. Вручную создаём стандартную структуру tooltip Pannellum:
+      //    <div class="pnlm-tooltip"><span>текст</span></div>
+      const tipText = (args && (args.label || args.text)) ? (args.label || args.text) : '';
+      if (tipText) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'pnlm-tooltip';
+
+        const span = document.createElement('span');
+        span.textContent = tipText;
+        tooltip.appendChild(span);
+
+        hotSpotDiv.appendChild(tooltip);
+      }
+    }
+
     // Инициализируем плеер
     pannellum.viewer('panorama', {
       type: "equirectangular",
@@ -294,32 +385,31 @@
       compass: true,
       title: "My Virtual Tour",
       author: "Your Name",
-      
+
       haov: 360,
       vaov: 120,
       avoidShowingBackground: true,
       minPitch: -60,
       maxPitch: 60,
-      minYaw: -170, 
-      maxYaw: 170,  
+      minYaw: -170,
+      maxYaw: 170,
       maxHfov: 90,
       hfov: 80,
-      hotSpotDebug: true,
-
+      // hotSpotDebug: true,
       hotSpots: [
-       // {
-           // 1. Всплывающая текстовая подсказка при наведении
-        //  pitch: 5,
-       //   yaw: 10,
-       //   type: "info",
-       //   text: "Всплывающая подсказка"
-     //   },
+     
         {
           // 2. Метка со ссылкой на другой сайт или страницу
           pitch: -4,
           yaw: -7,
           type: "info",
-          text: "Перейти на сайт (откроется в новой вкладке)",
+          text: "Вход",
+           createTooltipFunc: setupHotspot,
+           createTooltipArgs: {
+            extraClass: 'hotspot-arrow',
+            size: 55,
+            label: 'Вход'
+          },
           URL: "https://katsiarins81.github.io/pano11/map1_1.html"
         },
         {
@@ -327,11 +417,17 @@
           pitch: -1,
           yaw: 1,
           type: "info",
-          text: "Нажмите, чтобы открыть карусель",
+          text: "Увеличить вывеску",
+          createTooltipFunc: setupHotspot,
+          createTooltipArgs: {
+            extraClass: 'hotspot-carousel',
+            size: 55,
+            label: 'Увеличить вывеску'
+          },
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
-            title: "Неглюбские тканые рушники",
-            description: "Ниже представлены фотографии экспонатов:",
+            title: "Увеличить вывеску",
+            description: "",
             images: [
               "img0_1.jpg"
              
@@ -343,11 +439,17 @@
           pitch: 5,
           yaw: -28,
           type: "info",
-          text: "Нажмите, чтобы открыть карусель",
+          text: "Увеличить вывеску",
+          createTooltipFunc: setupHotspot,
+          createTooltipArgs: {
+            extraClass: 'hotspot-carousel',
+            size: 55,
+            label: 'Увеличить вывеску'
+          },
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
-            title: "Неглюбские тканые рушники",
-            description: "Ниже представлены фотографии экспонатов:",
+            title: "Увеличить вывеску",
+            description: "",
             images: [
               "img0_2.jpg"     
             ]
