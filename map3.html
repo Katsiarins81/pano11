@@ -372,26 +372,26 @@ function setupHotspot(hotSpotDiv, args) {
           // 2.1 Метка со ссылкой на другой сайт или страницу
           pitch: -13,
           yaw: -151,
+          text: "Перейти в начало",
           createTooltipFunc: setupHotspot,
           createTooltipArgs: {
-            extraClass: 'hotspot-arrow',
+            extraClass: 'hotspot-arrow pnlm-pointer',
             size: 55, 
              label: 'Перейти в начало'
           },
-          text: "Перейти в начало",
+         
           URL: "https://katsiarins81.github.io/pano11/index.html"
         },
          {
           // 2.2 Метка со ссылкой на другой сайт или страницу
           pitch: 3,
           yaw: 75,
+          text: 'Перейти во второй зал',
            createTooltipFunc: setupHotspot,
       createTooltipArgs: {
-        extraClass: 'hotspot-arrow',
-        size: 55, 
-        label: 'Перейти во второй зал'
+        extraClass: 'hotspot-arrow'
       },
-          text: 'Перейти во второй зал',
+          
           URL: "https://katsiarins81.github.io/pano11/map2.html"
         },
         {
@@ -402,9 +402,7 @@ function setupHotspot(hotSpotDiv, args) {
           text: "Нажмите, чтобы открыть карусель",
          createTooltipFunc: setupHotspot,
          createTooltipArgs: {
-           extraClass: 'hotspot-carousel',
-           size: 38, 
-           label: 'Открыть карусель'
+           extraClass: 'hotspot-carousel'
          },
           clickHandlerFunc: openModal, 
           clickHandlerArgs: {
@@ -428,9 +426,7 @@ function setupHotspot(hotSpotDiv, args) {
           text: "Нажмите, чтобы открыть карусель",
          createTooltipFunc: setupHotspot,
          createTooltipArgs: {
-           extraClass: 'hotspot-carousel',
-           size: 38, 
-           label: 'Открыть карусель'
+           extraClass: 'hotspot-carousel'
          },
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
@@ -452,9 +448,7 @@ function setupHotspot(hotSpotDiv, args) {
           text: "Нажмите, чтобы открыть карусель",
          createTooltipFunc: setupHotspot,
          createTooltipArgs: {
-           extraClass: 'hotspot-carousel',
-           size: 38, 
-           label: 'Открыть карусель'
+           extraClass: 'hotspot-carousel'
          },
           clickHandlerFunc: openModal,
           clickHandlerArgs: {
@@ -486,7 +480,7 @@ function setupHotspot(hotSpotDiv, args) {
     background-position: 0 220px !important;
     background-size: 110% !important;
 }
-    .hotspot-arrowtr{
+    .pnlm-pointer{
       transform: translate(-17.52px, 662.552px) translateZ(9999px) rotate(-90deg)  !important;
     }
   </style>
