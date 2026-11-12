@@ -327,7 +327,18 @@
       currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
       slides[currentSlideIndex].classList.add('active');
     }
+// 1. Объявляем функцию, которая получает сам DOM-элемент метки (hotSpotDiv) и ваши аргументы
+function setupHotspot(hotSpotDiv, args) {
+  // Добавляем любые классы напрямую в DOM
+  hotSpotDiv.classList.add('custom-hotspot', args.extraClass);
 
+  // При необходимости задаём индивидуальный размер прямо через JS
+  if (args.size) {
+    hotSpotDiv.style.width = args.size + 'px';
+    hotSpotDiv.style.height = args.size + 'px';
+    hotSpotDiv.style.backgroundSize = Math.round(args.size * 0.6) + 'px';
+  }
+}
     // Инициализируем плеер
     pannellum.viewer('panorama', {
       type: "equirectangular",
@@ -347,19 +358,8 @@
       maxHfov: 90,
       hfov: 80,
    //   hotSpotDebug: true,
-    }
-// 1. Объявляем функцию, которая получает сам DOM-элемент метки (hotSpotDiv) и ваши аргументы
-function setupHotspot(hotSpotDiv, args) {
-  // Добавляем любые классы напрямую в DOM
-  hotSpotDiv.classList.add('custom-hotspot', args.extraClass);
+    
 
-  // При необходимости задаём индивидуальный размер прямо через JS
-  if (args.size) {
-    hotSpotDiv.style.width = args.size + 'px';
-    hotSpotDiv.style.height = args.size + 'px';
-    hotSpotDiv.style.backgroundSize = Math.round(args.size * 0.6) + 'px';
-  }
-}
       hotSpots: [
        // {
            // 1. Всплывающая текстовая подсказка при наведении
